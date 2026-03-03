@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 
-<html class="light" lang="uz">
+<html class="light" lang="en">
 
 <head>
     <meta charset="utf-8" />
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-    <title>Asosiy Dashboard | Django Todo</title>
+    <title>Main Dashboard | Django Todo</title>
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap"
         rel="stylesheet" />
@@ -44,12 +44,12 @@
             document.getElementById("taskModal").classList.remove("hidden");
         }
 
-        // Modalni yopish
+        // Close modal
         function closeModal() {
             document.getElementById("taskModal").classList.add("hidden");
         }
 
-        // Toggle (ochiq bo'lsa yopadi, yopiq bo'lsa ochadi)
+        // Toggle (if open -> close, if closed -> open)
         function toggleModal() {
             document.getElementById("taskModal").classList.toggle("hidden");
         }
@@ -57,34 +57,34 @@
         function showToast() {
             const toast = document.getElementById("toast");
 
-            toast.classList.remove("hidden"); // ko'rsatadi
+            toast.classList.remove("hidden"); // show
 
-            autoHideToast(); // 5 sekunddan keyin yopiladi
+            autoHideToast(); // hide after 5 seconds
         }
 
         function autoHideToast() {
             const toast = document.getElementById("toast");
 
             setTimeout(() => {
-                toast.classList.add("hidden"); // yashiradi
-            }, 5000); // 5 sekund
+                toast.classList.add("hidden"); // hide
+            }, 5000); // 5 seconds
         }
 
         function toggleDropdown(event, id) {
             event.stopPropagation();
 
-            // Boshqa ochiq dropdownlarni yopish
+            // Close other open dropdowns
             document.querySelectorAll("[id^='dropdown-']").forEach(el => {
                 if (el.id !== id) {
                     el.classList.add("hidden");
                 }
             });
 
-            // Tanlangan dropdownni toggle qilish
+            // Toggle selected dropdown
             document.getElementById(id).classList.toggle("hidden");
         }
 
-        // Tashqarisini bosganda yopish
+        // Close on outside click
         window.addEventListener("click", function () {
             document.querySelectorAll("[id^='dropdown-']").forEach(el => {
                 el.classList.add("hidden");
@@ -94,16 +94,16 @@
         function openEditModal(id, title, desc, status, date, time) {
             console.log(title, id, status, date);
 
-            // Modalni ochish
+            // Open modal
             document.getElementById("taskModal").classList.remove("hidden");
 
-            // Form action ni update urlga o‘zgartirish
+            // Change form action to update url
             document.getElementById("taskForm").action = "task/update/" + id + "/";
 
             // Hidden id input
             document.getElementById("task-id").value = id;
 
-            // Inputlarni to‘ldirish
+            // Fill inputs
             document.getElementById("task-title").value = title;
             document.getElementById("task-desc").value = desc;
             document.getElementById("task-status").value = status;
@@ -123,7 +123,7 @@
                 <div class="bg-primary p-1.5 rounded-lg">
                     <span class="material-icons text-white text-xl">check_circle</span>
                 </div>
-                <h1 class="text-xl font-bold tracking-tight hidden md:block">Asosiy <span
+                <h1 class="text-xl font-bold tracking-tight hidden md:block">Main <span
                         class="text-primary">Dashboard</span></h1>
             </div>
             <!-- Search Bar -->
@@ -133,7 +133,7 @@
                         class="material-icons absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-primary transition-colors">search</span>
                     <input
                         class="w-full pl-10 pr-4 py-2 bg-slate-100 dark:bg-slate-800 border-transparent focus:border-primary focus:ring-0 rounded-xl transition-all outline-none text-sm"
-                        placeholder="Vazifalarni qidirish..." type="text" />
+                        placeholder="Search tasks..." type="text" />
                 </div>
             </div>
             <!-- User Profile -->
@@ -159,6 +159,7 @@
             </div>
         </div>
     </nav>
+
     <!-- Main Content -->
     <main class="max-w-7xl mx-auto px-4 py-8">
         <!-- Toolbar Section -->
@@ -179,12 +180,12 @@
             <button onclick="openModal()"
                 class="flex items-center justify-center gap-2 bg-primary hover:bg-blue-700 text-white px-6 py-2.5 rounded-xl font-semibold shadow-lg shadow-primary/20 transition-all transform hover:-translate-y-0.5 active:translate-y-0">
                 <span class="material-icons text-xl">add</span>
-                <span>Yangi vazifa</span>
+                <span>New task</span>
             </button>
         </div>
+
         <!-- Task Grid -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <!-- Task Card 1: To Do -->
             {% for task in tasks %}
             <div
                 class="group bg-white dark:bg-slate-900 p-5 rounded-xl border border-slate-200 dark:border-slate-800 hover:shadow-xl hover:shadow-slate-200/50 dark:hover:shadow-none transition-all cursor-pointer border-l-4 border-l-amber-400">
@@ -197,8 +198,6 @@
                     </button>
                 </div>
                 <div class="relative">
-
-
                     <div id="dropdown-{{task.id}}"
                         class="hidden absolute right-0 mt-1 w-44 bg-white dark:bg-slate-800 rounded-xl shadow-2xl border border-slate-100 dark:border-slate-700 py-2 z-20">
 
@@ -210,21 +209,24 @@
         '{{task.date|date:" Y-m-d"}}', '{{task.time|time:"H:i"}}' )"
                             class="w-full flex items-center gap-3 px-4 py-2 text-sm text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors">
                             <span class="material-icons text-lg text-slate-400">edit</span>
-                            <span>Tahrirlash</span>
+                            <span>Edit</span>
                         </button>
+
                         <a href="{% url 'task_archive' pk=task.id %}">
-                        <button
-                            class="w-full flex items-center gap-3 px-4 py-2 text-sm text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors">
-                            <span class="material-icons text-lg text-slate-400">archive</span>
-                            <span>Arxivlash</span>
-                        </button>
+                            <button
+                                class="w-full flex items-center gap-3 px-4 py-2 text-sm text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors">
+                                <span class="material-icons text-lg text-slate-400">archive</span>
+                                <span>Archive</span>
+                            </button>
                         </a>
+
                         <div class="my-1 border-t border-slate-100 dark:border-slate-700"></div>
+
                         <a href="{% url 'task_delete' pk=task.id %}">
                             <button
                                 class="w-full flex items-center gap-3 px-4 py-2 text-sm text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors">
                                 <span class="material-icons text-lg">delete_outline</span>
-                                <span>O'chirish</span>
+                                <span>Delete</span>
                             </button>
                         </a>
                     </div>
@@ -240,6 +242,7 @@
                 </div>
             </div>
             {% endfor %}
+
             <!-- Add New Task Empty Placeholder Card -->
             <div onclick="openModal()"
                 class="group border-2 border-dashed border-slate-200 dark:border-slate-800 rounded-xl p-5 flex flex-col items-center justify-center text-slate-400 hover:border-primary hover:text-primary transition-all cursor-pointer min-h-[200px]">
@@ -247,13 +250,14 @@
                     class="w-12 h-12 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center mb-3 group-hover:bg-primary/10 transition-colors">
                     <span class="material-icons text-2xl">add</span>
                 </div>
-                <p class="font-semibold">Yangi karta qo'shish</p>
-                <p class="text-xs">Tezkor vazifa yaratish uchun bosing</p>
+                <p class="font-semibold">Add new card</p>
+                <p class="text-xs">Click to quickly create a task</p>
             </div>
         </div>
+
         <!-- Pagination/Footer -->
         <div class="mt-12 flex flex-col sm:flex-row items-center justify-between gap-4">
-            <p class="text-sm text-slate-500">Jami {{jami}} ta vazifadan 5 tasi ko'rsatilmoqda</p>
+            <p class="text-sm text-slate-500">Showing 5 tasks out of {{jami}} total</p>
             <div class="flex items-center gap-2">
                 <button
                     class="p-2 border border-slate-200 dark:border-slate-800 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800 disabled:opacity-50"
@@ -277,14 +281,15 @@
             </div>
         </div>
     </main>
-    <!-- Simple Feedback Toast (Static) -->
+
+    <!-- Toast -->
     <div id="toast"
         class="hidden fixed bottom-6 right-6 flex items-center gap-3 bg-slate-900 text-white px-4 py-3 rounded-xl shadow-2xl border border-slate-700/50">
         <span class="material-icons text-emerald-400">check_circle</span>
-        <span class="text-sm font-medium">Barcha o'zgarishlar saqlandi</span>
+        <span class="text-sm font-medium">All changes saved</span>
     </div>
 
-
+    <!-- Modal -->
     <div id="taskModal"
         class="fixed inset-0 z-[60] bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 hidden">
         <div
@@ -293,7 +298,7 @@
                 class="px-6 py-4 border-b border-slate-100 dark:border-slate-800 flex justify-between items-center bg-slate-50/50 dark:bg-slate-800/50">
                 <h2 class="text-xl font-bold text-slate-800 dark:text-white flex items-center gap-2">
                     <span class="material-icons text-primary">add_task</span>
-                    Vazifa Qo'shish
+                    Add Task
                 </h2>
                 <button onclick="closeModal()"
                     class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors">
@@ -304,27 +309,27 @@
                 {% csrf_token %}
                 <input type="hidden" name="task-id" id="task-id">
                 <div class="space-y-1.5">
-                    <label class="text-sm font-semibold text-slate-700 dark:text-slate-300">Vazifa nomi</label>
+                    <label class="text-sm font-semibold text-slate-700 dark:text-slate-300">Task name</label>
                     <input
                         class="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 rounded-xl focus:ring-primary focus:border-primary transition-all text-sm"
-                        placeholder="Masalan: API hujjatlarini yozish" type="text" name="task-title" id="task-title" />
+                        placeholder="Example: Write API documentation" type="text" name="task-title" id="task-title" />
                 </div>
                 <div class="space-y-1.5">
-                    <label class="text-sm font-semibold text-slate-700 dark:text-slate-300">Tavsif</label>
+                    <label class="text-sm font-semibold text-slate-700 dark:text-slate-300">Description</label>
                     <textarea
                         class="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 rounded-xl focus:ring-primary focus:border-primary transition-all text-sm resize-none"
-                        placeholder="Vazifa haqida batafsil ma'lumot..." rows="3" name="task-desc"
+                        placeholder="Detailed information about the task..." rows="3" name="task-desc"
                         id="task-desc"></textarea>
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div class="space-y-1.5">
-                        <label class="text-sm font-semibold text-slate-700 dark:text-slate-300">Holat</label>
+                        <label class="text-sm font-semibold text-slate-700 dark:text-slate-300">Status</label>
                         <div class="relative">
                             <select name="task-status" id="task-status"
                                 class="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 rounded-xl focus:ring-primary focus:border-primary transition-all text-sm appearance-none">
-                                <option value="todo">Bajarish kerak</option>
-                                <option value="complated">Tugallangan</option>
-                                <option value="archive">Arxivda</option>
+                                <option value="todo">To do</option>
+                                <option value="complated">Completed</option>
+                                <option value="archive">Archived</option>
                             </select>
                             <span
                                 class="material-icons absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none text-xl">expand_more</span>
@@ -332,7 +337,7 @@
                     </div>
                     <div class="hidden md:block"></div>
                     <div class="space-y-1.5">
-                        <label class="text-sm font-semibold text-slate-700 dark:text-slate-300">Sana</label>
+                        <label class="text-sm font-semibold text-slate-700 dark:text-slate-300">Date</label>
                         <div class="relative">
                             <input id="task-date"
                                 class="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 rounded-xl focus:ring-primary focus:border-primary transition-all text-sm"
@@ -340,7 +345,7 @@
                         </div>
                     </div>
                     <div class="space-y-1.5">
-                        <label class="text-sm font-semibold text-slate-700 dark:text-slate-300">Vaqt</label>
+                        <label class="text-sm font-semibold text-slate-700 dark:text-slate-300">Time</label>
                         <div class="relative">
                             <input id="task-time"
                                 class="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 rounded-xl focus:ring-primary focus:border-primary transition-all text-sm"
@@ -352,12 +357,12 @@
                     <button onclick="closeModal()"
                         class="px-6 py-2.5 text-sm font-semibold text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-all"
                         type="button">
-                        Bekor qilish
+                        Cancel
                     </button>
                     <button
                         class="px-8 py-2.5 text-sm font-semibold bg-primary hover:bg-blue-700 text-white rounded-xl shadow-lg shadow-primary/20 transition-all transform hover:-translate-y-0.5 active:translate-y-0"
                         type="submit">
-                        Saqlash
+                        Save
                     </button>
                 </div>
             </form>
